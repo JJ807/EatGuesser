@@ -1,0 +1,107 @@
+{% extends "search/base.html" %}
+{% block content %}
+
+{{ jsonData|json_script:"jsonData_name" }} 
+
+        <span class="article-title" style="font-size: x-large">{{errorMessage}}</span>
+        
+        <form id="f" method="GET" action="{% url 'search-results' %}">
+                <div class="blank">
+		</div>
+                <pre class="tab"> </pre>
+                <a style="color:#38AA31"class="article-title">Do you want to try again?</a>
+                <div class="row">
+                        <input class="q" style="margin-top: 0;" name="q" id="search_bar" value="{{request.GET.q}}" placeholder="Type your products..." onkeyup="display('search_bar')"/>      
+                        <button class="btn btn-success" id="search-button" style="margin-left: 2em; margin-top: 0;float: right;" type="submit">
+                                Search
+                        </button><br>
+                </div>
+		<script>
+		var dict = {};
+		var dict = JSON.parse(document.getElementById('jsonData_name').textContent);
+
+		function getValue(myKey)
+		{
+			return dict[myKey];
+		};
+
+		function display(id)
+		{
+			var counter = 0;
+			lista = document.getElementById(id).value.split(" ");
+			for (word in lista)
+			{
+				counter += 1;
+			}
+			var target = lista[counter-1];
+			if(target === "" || target === " ")
+			{
+				target = lista[counter-2];
+			}
+			var value = getValue(target);
+			if(value === undefined)
+			{
+				
+				document.getElementById("demo").innerHTML = " ";
+			}
+			else
+			{
+				
+				document.getElementById("demo").innerHTML = value;
+			}
+		}
+	        </script>
+                <h3 style="font-size:20px"name="hints" id="hints"><style>#hints{position: absolute; left: 100px; }</style>Suggested product:</h3>
+                <div class="demo" id="demo"></div>
+                <br>
+                <pre class="tab"> </pre>
+                <div class="row" method="GET" action="{% url 'search-results' %}">
+			<label class="container" for="blncd">Balanced 
+				<input type="checkbox" id="blncd" name="blncd" value="t">
+				<span class="checkmark"></span>
+			</label>
+			<label class="container" for="hprot">High protein 
+				<input type="checkbox" id="hprot" name="hprot" value="t">
+				<span class="checkmark"></span>
+			</label>
+			<label class="container" for="lfat">Low-fat 
+				<input type="checkbox" id="lfat" name="lfat" value="t">
+				<span class="checkmark"></span>
+			</label>
+			<label class="container" for="lcarb">Low-carb
+				<input type="checkbox" id="lcarb" name="lcarb" value="t">
+				<span class="checkmark"></span>
+			</label>
+		</div>
+		<div class="row">
+			<label class="container" for="sugcon">Sugar-consious
+				<input type="checkbox" id="sugcon" name="sugcon" value="t">
+				<span class="checkmark"></span>
+			</label>
+			<label class="container" for="veg">Vegetarian
+				<input type="checkbox" id="veg" name="veg" value="t">
+				<span class="checkmark"></span>
+			</label>
+			<label class="container" for="vegan">Vegan
+				<input type="checkbox" id="vegan" name="vegan" value="t">
+				<span class="checkmark"></span>
+			</label>
+		</div>
+		<div class="row">
+			<label class="container" for="pnfree">Peanut-free 
+				<input type="checkbox" id="pnfree" name="pnfree" value="t">
+				<span class="checkmark"></span>
+			</label>
+			<label class="container" for="tnfree">Tree-nut-free 
+				<input type="checkbox" id="tnfree" name="tnfree" value="t">
+				<span class="checkmark"></span>
+			</label>
+			<label class="container" for="alcfree">Alcohol-free 
+				<input type="checkbox" id="alcfree" name="alcfree" value="t">
+				<span class="checkmark"></span>
+			</label>
+		</div>
+	</div>
+                <pre class="tab"> </pre>
+        </form>
+{% endblock content %}

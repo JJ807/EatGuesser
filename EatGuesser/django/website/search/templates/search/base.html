@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" type="text/css" href="../../static/main.css">
+
+	{% if title %}
+		<title>EatGuesser - {{ title }}</title>
+	{% else %}
+		<title>EatGuesser</title>
+	{% endif %}
+</head>
+<body>
+  <nav id="overlay">
+    <ul id="top">
+      <li>
+        <a href="{% url 'search-home' %}">Home</a>
+      </li>
+      <li>
+        <a href="{% url 'search-subsite' %}">Shopping List</a>
+      </li>
+      <li>
+        <a href="{% url 'search-likedrecipes' %}">Your Recipes</a>
+      </li>
+    </ul>
+    <ul class="nav-bt" id="bottom">
+    {% if user.is_authenticated %}
+      <li>
+        <a href="{% url 'profile' %}">Profile</a>
+      </li>
+      <li>
+        <a href="{% url 'logout' %}">Logout</a>
+      </li>
+      {% else %}
+      <li>
+        <a href="{% url 'login' %}">Login</a>
+      </li>      
+      <li>
+        <a href="{% url 'register' %}">Register</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  <img src="/static/images/Hamburger.svg" class="menu-btn" id="open-menu">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{message}}
+        </div>
+      {% endfor %}
+    {% endif %}
+    <div class="shopping-list" id="shopping-list">
+      <h3>
+        Shopping list
+      </h3>
+      <p class='text-muted'style="text-align:center; margin-bottom: 0">
+        Products you need to buy:
+      </p>
+      <!-- <script> 
+        function auto_grow(element) {
+          element.style.height = "5px";
+          element.style.height = (element.scrollHeight)+"px";
+        }
+      </script>-->
+      <ul id="products_list" class="list-group" style="list-style-type: none;">
+        <button type="button" class="btn btn-success btn-add-prod" id="add_products" onclick="click_button(this); style.display='none'">
+          Add products
+        </button>
+      </ul>
+      <p hidden id="counter">
+      </p>
+      <script>
+          function myFunction() {
+            var value = document.getElementById("counter");
+            var number = value.innerHTML;
+            number++;
+            var node = document.createElement("LI");
+            var x = document.createElement("INPUT");
+            var y = document.createElement("INPUT");
+            x.setAttribute("type", "text");
+            x.setAttribute("id", "textbox" + number.toString());
+            value.innerHTML = number;
+            x.setAttribute("onkeypress", "javascript:doit_onkeypress(event);");
+            x.setAttribute("placeholder", "New product");
+            y.setAttribute("type", "checkbox");
+            {% comment %} node.appendChild(y); {% endcomment %}
+            node.setAttribute("class", "new-prod");
+            node.appendChild(x);
+            document.getElementById("products_list").appendChild(node);
+            document.body.append(y);
+          }
+          
+      </script>
+      <script type="text/javascript">
+          var shoplist = "";
+          function doit_onkeypress(event){
+              if (event.keyCode == 13 || event.which == 13){
+                if(document.getElementById("counter").innerHTML < 50)
+                  {
+                      myFunction();
+                      var number = document.getElementById("counter").innerHTML;
+                      document.getElementById("textbox"+(number).toString()).focus();
+
+                      shoplist = shoplist + document.getElementById("textbox"+(number-1).toString()).value + " ";
+                      document.getElementById("shoplist").value=shoplist;
+                  }
+              }
+          }
+          function click_button(button){
+                      myFunction();
+                      var number = document.getElementById("counter").innerHTML;
+                      document.getElementById("textbox"+(number).toString()).focus();
+              }
+      </script>
+      <form action="" method="POST" style="margin-left: auto; margin-right: auto">
+        {% csrf_token %}
+        <input type="hidden" name="ingredients" id="shoplist"/>
+        <input class="btn apply-btn btn-success" type="submit" value="Apply changes."/>
+      </form>
+                <!-- <input type="checkbox"/> -->
+          <!--<input type="text" placeholder="New product" onkeypress="javascript:doit_onkeypress(event);" />-->
+          <!--<textarea oninput="auto_grow(this)"></textarea>-->
+          <!--<textarea name="Products" cols="10" rows="20"></textarea> -->
+      <!-- </p> -->
+    </div>
+    {% block content %}
+
+    {% endblock %}
+  <img src="/static/images/Triangle.svg" class="triangle" id="triangle">
+  <img src="/static/images/bg.jpg" class="bg" id="bg">
+  <script>
+  
+    var overlay = document.getElementById('overlay');
+    var triangle = document.getElementById('triangle');
+    var closeMenu = document.getElementById('');
+    var openMenu = document.getElementById('open-menu');
+
+    openMenu.addEventListener('click', function(){
+      overlay.classList.add('show-menu');
+      openMenu.classList.add('hide-menu')
+      triangle.classList.add('hide-triangle');
+    });
+
+
+  </script>
+
+	<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <script>
+
+    var overlay = document.getElementById('overlay');
+
+    document.getElementById('f').addEventListener('click', function(){
+      overlay.classList.remove('show-menu');
+      triangle.classList.remove('hide-triangle');
+      openMenu.classList.remove('hide-menu');
+    });
+
+  </script>
+</body>
+</html>
